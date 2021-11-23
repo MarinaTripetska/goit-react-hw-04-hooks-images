@@ -1,0 +1,54 @@
+.idleText {
+  color: rgb(54, 78, 146);
+}
+.errorText {
+  color: rgb(255, 107, 49);
+}
+.errorText,
+.idleText {
+  font-size: 1.5em;
+  font-style: italic;
+  text-align: center;
+
+  animation-name: slideRight;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  visibility: visible !important;
+}
+.title {
+  text-align: center;
+  color: rgb(54, 78, 146);
+}
+.galleryGrid {
+  display: grid;
+  max-width: calc(100vw - 48px);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-gap: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  list-style: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(-150%);
+  }
+  50% {
+    transform: translateX(8%);
+  }
+  65% {
+    transform: translateX(-4%);
+  }
+  80% {
+    transform: translateX(4%);
+  }
+  95% {
+    transform: translateX(-2%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
