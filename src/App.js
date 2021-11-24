@@ -10,14 +10,7 @@ import buttonStyles from './components/Button/Button.module.css'
 class App extends Component {
   state = {
     searchValue: '',
-    showModal: false,
     largeImage: '',
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.largeImage !== this.state.largeImage) {
-      this.toggleModal()
-    }
   }
 
   onSubmit = data => {
@@ -27,27 +20,24 @@ class App extends Component {
   handleModalOpen = url => {
     this.setState({ largeImage: url })
   }
-
-  toggleModal = () => {
-    this.setState(prevState => {
-      return { showModal: !prevState.showModal }
-    })
+  handleModalClose = () => {
+    this.setState({ largeImage: '' })
   }
 
   render() {
-    const { searchValue, showModal, largeImage } = this.state
+    const { searchValue, largeImage } = this.state
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
 
         <ImageGallery searchValue={searchValue} handleModalOpen={this.handleModalOpen} />
 
-        {showModal && (
-          <Modal onClose={this.toggleModal}>
-            <Button type="button" className={buttonStyles.close} onClick={this.toggleModal}>
+        {largeImage !== '' && (
+          <Modal onClose={this.handleModalClose}>
+            <Button type="button" className={buttonStyles.close} onClick={this.handleModalClose}>
               X
             </Button>
-            <img src={largeImage} alt="#" />
+            <img src={largeImage} alt="#" className="largeImage" />
           </Modal>
         )}
       </>

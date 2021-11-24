@@ -10,8 +10,6 @@ import fetchImages from '../../API/APIfetchGET'
 import s from './ImageGallery.module.css'
 import buttonStyles from '../Button/Button.module.css'
 
-const shortid = require('shortid')
-
 class ImageGallery extends Component {
   state = {
     images: null,
@@ -115,7 +113,7 @@ class ImageGallery extends Component {
           <ul className={s.galleryGrid}>
             {images.map(({ webformatURL, tags, largeImageURL }) => (
               <ImageGalleryItem
-                key={shortid.generate()}
+                key={largeImageURL}
                 imgUrl={webformatURL}
                 bigImgURL={largeImageURL}
                 description={tags}

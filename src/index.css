@@ -23,3 +23,6 @@ img {
 button {
   padding: 0;
 }
+.largeImage {
+  object-fit: contain;
+}
