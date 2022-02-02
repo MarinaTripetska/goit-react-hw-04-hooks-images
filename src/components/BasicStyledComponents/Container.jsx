@@ -7,6 +7,4 @@ const ContainerStyled = styled.div`
   padding: 0 15px;
 `
 
-export default function Container({ children }) {
-  return <ContainerStyled>{children}</ContainerStyled>
-}
+export default ContainerStyled

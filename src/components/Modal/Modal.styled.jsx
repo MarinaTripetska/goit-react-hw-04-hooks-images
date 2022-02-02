@@ -1,4 +1,7 @@
-.overlay {
+import styled from 'styled-components'
+import { overlayDark } from '../../ColorPalette'
+
+export const Overlay = styled.div`
   position: fixed;
   z-index: 3;
 
@@ -8,9 +11,9 @@
   height: 100%;
   padding: 50px;
 
-  background-color: rgba(0, 0, 0, 0.466);
-}
-.modal {
+  background-color: ${overlayDark};
+`
+export const ModalWindow = styled.div`
   position: absolute;
   width: 100%;
   max-width: 100vw;
@@ -20,16 +23,12 @@
   left: 50%;
 
   transform: translate(-50%, -50%);
-}
 
-@media screen and (min-width: 768px) {
-  .modal {
+  @media screen and (min-width: 768px) {
     max-width: 768px;
   }
-}
 
-@media screen and (min-width: 1200px) {
-  .modal {
+  @media screen and (min-width: 1200px) {
     max-width: 1200px;
   }
-}
+`

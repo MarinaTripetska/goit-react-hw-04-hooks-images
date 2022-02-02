@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-
-import { Button } from '../Button'
-import buttonStyles from '../Button/Button.module.css'
-
-import s from './Searchbar.module.css'
+import { SearchFormButton } from '../Buttons'
+import { Header, Form, Input } from './SearchBar.styled'
 
 export default function Searchbar({ onSubmit }) {
   const [searchInput, setSearchInput] = useState('')
@@ -23,14 +20,11 @@ export default function Searchbar({ onSubmit }) {
   }
 
   return (
-    <header className={s.header}>
-      <form className={s.form} onSubmit={handleSubmit}>
-        <Button type="submit" className={buttonStyles.searchForm}>
-          <span className="button-label">Search</span>
-        </Button>
+    <Header>
+      <Form onSubmit={handleSubmit}>
+        <SearchFormButton type="submit">Search</SearchFormButton>
 
-        <input
-          className={s.input}
+        <Input
           type="text"
           autoComplete="off"
           autoFocus
@@ -38,8 +32,8 @@ export default function Searchbar({ onSubmit }) {
           onChange={e => setSearchInput(e.currentTarget.value)}
           value={searchInput}
         />
-      </form>
-    </header>
+      </Form>
+    </Header>
   )
 }
 

@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
-
-import s from './Modal.module.css'
+import { Overlay, ModalWindow } from './Modal.styled'
 
 const modalRoot = document.getElementById('modal-portal')
 
@@ -20,17 +19,15 @@ export default function Modal({ onClose, children }) {
     }
   }
 
+  const handleOverlayClick = e => {
+    if (e.currentTarget === e.target) {
+      onClose()
+    }
+  }
   return createPortal(
-    <div
-      className={s.overlay}
-      onClick={e => {
-        if (e.currentTarget === e.target) {
-          onClose()
-        }
-      }}
-    >
-      <div className={s.modal}>{children}</div>
-    </div>,
+    <Overlay onClick={handleOverlayClick}>
+      <ModalWindow>{children}</ModalWindow>
+    </Overlay>,
     modalRoot,
   )
 }
