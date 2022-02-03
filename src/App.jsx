@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { fetch } from 'API/APIfetchGET'
 import Searchbar from 'components/Searchbar'
 import ImageGalleryList from 'components/ImageGalleryList'
@@ -25,65 +25,55 @@ export default function App() {
   const [moreLoadStatus, setMoreLoadStatus] = useState(INITIAL_STATUS.idle)
   const [page, setPage] = useState(1)
 
-  //записываем в стейт ключевое слово для поиска, которое приходит из формы
+  //create ref for DOM element list (Gallery)
+  const imgListRef = useRef()
+
+  //save to the state the search keyword that comes from the form, clear the page number and the array of images
   const onSubmitSearchValue = data => {
     setSearchValue(data)
+    setImages([])
+    setPage(1)
   }
-  //Записываем в стейт урл большого изображения. приходит из ImgItem
+  //We write to the state url of a large image comes from ImgItem
   const handleModalOpen = url => {
     setLargeImage(url)
   }
-  //При закрытии модалки, очищаем стейт
+  //When closing the modal, clear the state
   const handleModalClose = () => setLargeImage('')
 
+  //fetching images
   useEffect(() => {
     if (searchValue === '') {
       return
     }
 
-    setStatus(pending)
-
-    fetch(searchValue)
-      .then(data => {
-        if (data.length === 0) {
-          throw new Error(`Unfortunately, nothing found with search name "${searchValue}" :( `)
-        } else {
-          setImages([...data])
-          setStatus(resolved)
-        }
-      })
-      .catch(error => {
-        setError(error)
-        setStatus(rejected)
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchValue])
-
-  useEffect(() => {
-    if (page === 1) {
-      return
-    }
-
-    setMoreLoadStatus(pending)
+    page === 1 && setStatus(pending)
+    page > 1 && setMoreLoadStatus(pending)
 
     fetch(searchValue, page)
       .then(data => {
-        if (data.length === 0) {
-          throw new Error(`Images with tag ${searchValue} has been finished.`)
+        if (data.length === 0 && page > 1) {
+          throw new Error(`Images with tag "${searchValue}" has been finished.`)
+        } else if (data.length === 0) {
+          throw new Error(`Unfortunately, nothing found with search name "${searchValue}" :( `)
         } else {
           setImages(prevImages => [...prevImages, ...data])
+          setStatus(resolved)
           setMoreLoadStatus(resolved)
-          // const ulElems = imageToScroll.current.children
-          // ulElems[ulElems.length - 9].scrollIntoView({ behavior: 'smooth' })
+          //find 1 child elem of Gallery list from LoadMore fetch and scroll to it
+          if (page > 1) {
+            const ulElems = imgListRef.current.children
+            ulElems[ulElems.length - 9].scrollIntoView({ behavior: 'smooth' })
+          }
         }
       })
       .catch(error => {
         setError(error)
-        setMoreLoadStatus(rejected)
+        page === 1 && setStatus(rejected)
+        page > 1 && setMoreLoadStatus(rejected)
       })
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [searchValue, page])
 
   return (
     <>
@@ -93,8 +83,8 @@ export default function App() {
       {status === pending && <Loader />}
       {status === resolved ? (
         <>
-          <ImageGalleryList images={images} handleModalOpen={handleModalOpen} />
-          {/* <div ref={this.endElRef} /> */}
+          <ImageGalleryList images={images} handleModalOpen={handleModalOpen} ref={imgListRef} />
+
           {moreLoadStatus === idle || moreLoadStatus === resolved ? (
             <LoadMoreButton type="button" onClick={() => setPage(prev => prev + 1)}>
               Load more
@@ -109,7 +99,6 @@ export default function App() {
       {largeImage !== '' && (
         <Modal onClose={handleModalClose}>
           <CloseButton type="button" onClick={handleModalClose} children="X" />
-
           <img src={largeImage} alt="#" />
         </Modal>
       )}
